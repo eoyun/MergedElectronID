@@ -1,0 +1,5 @@
+data/*
+*.png
+*.keras
+ckpt/*
+logs/*
