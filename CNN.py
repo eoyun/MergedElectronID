@@ -15,26 +15,17 @@ import keras.backend as K
 
 from tqdm import tqdm
 from keras_cv_attention_models import swin_transformer_v2
-from keras_cv_attention_models import convnext
 from glob import glob
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from IPython.display import clear_output
 
-import datetime
-
-def generate_output_filename():
-    now = datetime.datetime.now()
-    timestamp = now.strftime("%Y%m%d_%H%M")
-    filename = f"{timestamp}"
-    return filename
 SEED = 42
 IMG_SIZE = 98
 BATCH_SIZE = 8
 EPOCHS = 100
 NUM_CLASSES = 3
-datetime = generate_output_filename()
-VERSION = f"wo_meta_{datetime}"
+VERSION = "cnn"
 AUTOTUNE = tf.data.AUTOTUNE
 
 keras.utils.set_random_seed(SEED)
@@ -124,7 +115,6 @@ def build_model():
     inputs = keras.Input((IMG_SIZE, IMG_SIZE, 3))
 
     backbone = swin_transformer_v2.SwinTransformerV2Base_window16(
-    #backbone = convnext.ConvNeXtBase(
         input_shape=(IMG_SIZE, IMG_SIZE, 3),
         num_classes=0,
         pretrained="imagenet22k"
@@ -136,6 +126,68 @@ def build_model():
     outputs = keras.layers.Dense(NUM_CLASSES, activation="softmax", dtype="float32")(x)
 
     model = keras.Model(inputs, outputs)
+    return model
+
+def build_cnn_model():
+    keras.mixed_precision.set_global_policy("mixed_float16")
+
+    inputs = keras.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
+
+    x = keras.layers.Rescaling(scale=1./127.5, offset=-1.)(inputs)
+
+    x = keras.layers.Conv2D(
+        filters=32,
+        kernel_size=(3, 3),
+        padding="same",
+        use_bias=False,
+        dtype="float16"
+    )(x)
+    x = keras.layers.BatchNormalization(dtype="float16")(x)
+    x = keras.layers.Activation("relu", dtype="float16")(x)
+    x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+
+    x = keras.layers.Conv2D(
+        filters=64,
+        kernel_size=(3, 3),
+        padding="same",
+        use_bias=False,
+        dtype="float16"
+    )(x)
+    x = keras.layers.BatchNormalization(dtype="float16")(x)
+    x = keras.layers.Activation("relu", dtype="float16")(x)
+    x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+
+    x = keras.layers.Conv2D(
+        filters=128,
+        kernel_size=(3, 3),
+        padding="same",
+        use_bias=False,
+        dtype="float16"
+    )(x)
+    x = keras.layers.BatchNormalization(dtype="float16")(x)
+    x = keras.layers.Activation("relu", dtype="float16")(x)
+    x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+
+    x = keras.layers.Conv2D(
+        filters=256,
+        kernel_size=(3, 3),
+        padding="same",
+        use_bias=False,
+        dtype="float16"
+    )(x)
+    x = keras.layers.BatchNormalization(dtype="float16")(x)
+    x = keras.layers.Activation("relu", dtype="float16")(x)
+    x = keras.layers.MaxPooling2D(pool_size=(2, 2))(x)
+
+    x = keras.layers.GlobalAveragePooling2D(dtype="float16")(x)
+
+    outputs = keras.layers.Dense(
+        units=NUM_CLASSES,
+        activation="softmax",
+        dtype="float32"  # 마지막 출력을 float32로 고정
+    )(x)
+
+    model = keras.Model(inputs=inputs, outputs=outputs)
     return model
 
 class DisplayCallback(keras.callbacks.Callback):
@@ -209,7 +261,8 @@ optimizer = keras.optimizers.AdamW(1e-5)
 loss = keras.losses.CategoricalFocalCrossentropy(from_logits=False)
 f1 = keras.metrics.F1Score(average="macro", name="f1")
 
-model = build_model()
+#model = build_model()
+model = build_cnn_model()
 #model = get_debug_swin_v2()
 model.compile(optimizer=optimizer, loss=loss, metrics=[f1])
 model.fit(ds_train, validation_data=ds_valid, epochs=EPOCHS, callbacks=callbacks)
@@ -243,7 +296,7 @@ def plot_training_history(metrics_logger):
     plt.xlabel("Epochs")
     plt.ylabel("F1 Score")
     plt.legend()
-    plt.savefig(f"test_{VERSION}.png")
+    plt.savefig("test.png")
 
 plot_training_history(metrics_logger)
 
@@ -265,7 +318,7 @@ def plot_roc_curve(y_true, y_pred, labels, num_classes):
     plt.ylabel("True Positive Rate")
     plt.title("Multi-Class ROC Curve")
     plt.legend(loc="lower right")
-    plt.savefig(f"roc_{VERSION}.png")
+    plt.savefig("roc.png")
 
 ds_test = tf.data.Dataset.from_tensor_slices(X_test)
 ds_test = ds_test.map(lambda image: read_image(image), num_parallel_calls=AUTOTUNE)
