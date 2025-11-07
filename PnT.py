@@ -15,7 +15,7 @@ def plot_pred_vs_true(df, pred_col, true_col):
     confusion_matrix = pd.crosstab(df[true_col], df[pred_col], rownames=['True'], colnames=['Predicted'])
 
     # Plot heatmap
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(5, 4))
     sns.heatmap(confusion_matrix, annot=True, fmt="d", cmap="Blues", cbar=False)
     
     # Titles and labels
@@ -23,9 +23,9 @@ def plot_pred_vs_true(df, pred_col, true_col):
     plt.xlabel("Predicted Label")
     plt.ylabel("True Label")
     
-    plt.savefig("PnT_wo_meta.png")
+    plt.savefig("PnT_ENSEMBLE_20251024_2155.png")
 
-df = pd.read_csv("./results/keras/wo_meta.csv")
+df = pd.read_csv("./results/keras/ENSEMBLE_20251024_2155.csv")
 print(df)
 plot_pred_vs_true(df,"pred","true")
 

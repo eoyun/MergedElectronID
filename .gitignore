@@ -3,3 +3,5 @@ data/*
 *.keras
 ckpt/*
 logs/*
+*.csv
+results/
