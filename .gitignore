@@ -1,5 +1,12 @@
 data/*
 *.png
 *.keras
-ckpt/*
+ckpts/*
 logs/*
+*.csv
+results/
+ckpts/
+ckpts/
+*.h5
+*.pt
+*.ckpt
