@@ -275,8 +275,10 @@ for fold, (train_idx,valid_idx) in enumerate(skf.split(X_tmp,meta_tmp,y_tmp)):
     loss = keras.losses.CategoricalFocalCrossentropy(from_logits=False)
     
     # 백본 로드 시 compile=False (직렬화 경로 깔끔)
-    img_loaded  = keras.models.load_model(f'./ckpts/keras/wo_meta_20251022_0643/fold_{fold}.keras', compile=False)
-    meta_loaded = keras.models.load_model(f'./ckpts/keras/only_meta_20251022_0212/fold_{fold}.keras', compile=False)
+    #img_loaded  = keras.models.load_model(f'./ckpts/keras/wo_meta_20251022_0643/fold_{fold}.keras', compile=False)
+    #meta_loaded = keras.models.load_model(f'./ckpts/keras/only_meta_20251022_0212/fold_{fold}.keras', compile=False)
+    img_loaded  = keras.models.load_model(f'./ckpts/keras/wo_add_trk_20251114_1724/fold_{fold}.keras', compile=False)
+    meta_loaded = keras.models.load_model(f'./ckpts/keras/only_meta_20251118_1747/fold_{fold}.keras', compile=False)
     
     image_backbone = keras.Model(img_loaded.inputs,  img_loaded.outputs,  name="image_backbone")
     meta_backbone  = keras.Model(meta_loaded.inputs, meta_loaded.outputs, name="meta_backbone")

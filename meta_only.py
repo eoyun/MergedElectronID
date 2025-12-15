@@ -29,7 +29,7 @@ VERSION = f'only_meta_{datetime}'
 AUTOTUNE = tf.data.AUTOTUNE
 
 # 메타 + 라벨 불러오기 (기존 Swin 코드와 동일하게 전처리되어 있다고 가정)
-df = pd.read_csv("rm_invalid.csv")
+df = pd.read_csv("251106_v5_v2.csv")
 df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 df['dPhi'] = df['dPhi'].apply(lambda x: np.fromstring(x.strip("[]"), sep=' '))
 df['dEta'] = df['dEta'].apply(lambda x: np.fromstring(x.strip("[]"), sep=' '))
@@ -105,9 +105,9 @@ for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp)):
     callbacks = [
         DisplayCallback(),
         keras.callbacks.TensorBoard(log_dir=f"./logs/keras/{VERSION}/fold_{fold}"),
-        keras.callbacks.EarlyStopping(monitor="val_f1", mode="max", verbose=0, patience=5),
+        keras.callbacks.EarlyStopping(monitor="val_f1", mode="max", verbose=0, patience=10),
         keras.callbacks.ModelCheckpoint(f"./ckpts/keras/{VERSION}/fold_{fold}.keras", monitor="val_f1", mode="max", save_best_only=True),
-        keras.callbacks.ReduceLROnPlateau(monitor="val_f1", mode="min", factor=0.8, patience=3),
+        keras.callbacks.ReduceLROnPlateau(monitor="val_f1", mode="min", factor=0.8, patience=5),
         metrics_logger
     ]
     
@@ -169,7 +169,7 @@ def plot_roc_curve(y_true, y_pred, labels, num_classes):
     plt.ylabel("True Positive Rate")
     plt.title("Multi-Class ROC Curve")
     plt.legend(loc="lower right")
-    plt.savefig(f"./results/roc_meta_only_{VERSION{.png")
+    plt.savefig(f"./results/roc_meta_only_{VERSION}.png")
 
 ds_test = tf.data.Dataset.from_tensor_slices(X_test).batch(BATCH_SIZE).prefetch(AUTOTUNE)
 

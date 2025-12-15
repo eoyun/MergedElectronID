@@ -23,9 +23,9 @@ def plot_pred_vs_true(df, pred_col, true_col):
     plt.xlabel("Predicted Label")
     plt.ylabel("True Label")
     
-    plt.savefig("PnT_ENSEMBLE_20251024_2155.png")
+    plt.savefig("PnT_wo_add_trk_20251120_1916.png")
 
-df = pd.read_csv("./results/keras/ENSEMBLE_20251024_2155.csv")
+df = pd.read_csv("./results/keras/wo_add_trk_20251120_1916.csv")
 print(df)
 plot_pred_vs_true(df,"pred","true")
 
