@@ -26,11 +26,11 @@ NUM_META_INPUTS = 4
 SEED = 42
 datetime = generate_output_filename()
 #VERSION = f'only_meta_{datetime}'
-VERSION = 'only_meta_20251022_0212'
+VERSION = 'only_meta_20251118_1822'
 AUTOTUNE = tf.data.AUTOTUNE
 
 # 메타 + 라벨 불러오기 (기존 Swin 코드와 동일하게 전처리되어 있다고 가정)
-df = pd.read_csv("rm_invalid.csv")
+df = pd.read_csv("251106_v5_v2.csv")
 df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 df['dPhi'] = df['dPhi'].apply(lambda x: np.fromstring(x.strip("[]"), sep=' '))
 df['dEta'] = df['dEta'].apply(lambda x: np.fromstring(x.strip("[]"), sep=' '))
@@ -94,33 +94,33 @@ class DisplayCallback(keras.callbacks.Callback):
 metrics_logger = MetricsLogger()
 X_tmp, X_test, y_tmp, y_test = train_test_split(meta, y, test_size =0.2)
 skf = StratifiedKFold(n_splits=5, random_state=SEED, shuffle=True)
-#for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp)):
-#    X_train, y_train = meta[train_idx], y[train_idx]
-#    X_valid, y_valid = meta[valid_idx], y[valid_idx]
-#    y_train = ohe.transform(y_train.reshape(-1, 1))
-#    y_valid = ohe.transform(y_valid.reshape(-1, 1))
-#
-#    ds_train = tf.data.Dataset.from_tensor_slices((X_train, y_train)).batch(BATCH_SIZE).prefetch(AUTOTUNE)
-#    ds_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid)).batch(BATCH_SIZE).prefetch(AUTOTUNE)
-#    
-#    callbacks = [
-#        DisplayCallback(),
-#        keras.callbacks.TensorBoard(log_dir=f"./logs/keras/{VERSION}/fold_{fold}"),
-#        keras.callbacks.EarlyStopping(monitor="val_f1", mode="max", verbose=0, patience=5),
-#        keras.callbacks.ModelCheckpoint(f"./ckpts/keras/{VERSION}/fold_{fold}.keras", monitor="val_f1", mode="max", save_best_only=True),
-#        keras.callbacks.ReduceLROnPlateau(monitor="val_f1", mode="min", factor=0.8, patience=3),
-#        metrics_logger
-#    ]
-#    
-#    # 모델 학습
-#    model = build_meta_only_model()
-#    model.compile(
-#        optimizer=keras.optimizers.AdamW(1e-4),
-#        loss=keras.losses.CategoricalCrossentropy(),
-#        metrics=[keras.metrics.F1Score(average="macro",name="f1")]
-#    )
-#    model.fit(ds_train, validation_data=ds_valid, epochs=EPOCHS,callbacks = callbacks)
-#    K.clear_session()
+for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp)):
+    X_train, y_train = meta[train_idx], y[train_idx]
+    X_valid, y_valid = meta[valid_idx], y[valid_idx]
+    y_train = ohe.transform(y_train.reshape(-1, 1))
+    y_valid = ohe.transform(y_valid.reshape(-1, 1))
+
+    ds_train = tf.data.Dataset.from_tensor_slices((X_train, y_train)).batch(BATCH_SIZE).prefetch(AUTOTUNE)
+    ds_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid)).batch(BATCH_SIZE).prefetch(AUTOTUNE)
+    
+    callbacks = [
+        DisplayCallback(),
+        keras.callbacks.TensorBoard(log_dir=f"./logs/keras/{VERSION}/fold_{fold}"),
+        keras.callbacks.EarlyStopping(monitor="val_f1", mode="max", verbose=0, patience=5),
+        keras.callbacks.ModelCheckpoint(f"./ckpts/keras/{VERSION}/fold_{fold}.keras", monitor="val_f1", mode="max", save_best_only=True),
+        keras.callbacks.ReduceLROnPlateau(monitor="val_f1", mode="min", factor=0.8, patience=3),
+        metrics_logger
+    ]
+    
+    # 모델 학습
+    model = build_meta_only_model()
+    model.compile(
+        optimizer=keras.optimizers.AdamW(1e-4),
+        loss=keras.losses.CategoricalCrossentropy(),
+        metrics=[keras.metrics.F1Score(average="macro",name="f1")]
+    )
+    model.fit(ds_train, validation_data=ds_valid, epochs=EPOCHS,callbacks = callbacks)
+    K.clear_session()
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc, RocCurveDisplay
