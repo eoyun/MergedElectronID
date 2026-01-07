@@ -1,0 +1,41 @@
+000 (3368206.000.000) 2025-12-16 13:16:58 Job submitted from host: <155.230.20.251:9618?addrs=155.230.20.251-9618&alias=cms.knu.ac.kr&noUDP&sock=schedd_1657_2484>
+...
+001 (3368206.000.000) 2025-12-16 13:17:01 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2201959"
+	Cpus = 1
+	Disk = 5244678
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 5200
+...
+006 (3368206.000.000) 2025-12-16 13:17:09 Image size of job updated: 136496
+	134  -  MemoryUsage of job (MB)
+	136496  -  ResidentSetSize of job (KB)
+...
+006 (3368206.000.000) 2025-12-16 13:22:09 Image size of job updated: 2412216
+	1997  -  MemoryUsage of job (MB)
+	2043944  -  ResidentSetSize of job (KB)
+...
+005 (3368206.000.000) 2025-12-16 13:22:48 Job terminated.
+	(1) Normal termination (return value 1)
+		Usr 0 00:05:11, Sys 0 00:00:29  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:05:11, Sys 0 00:00:29  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated Assigned
+	   Cpus                 :     0.99        1         1 
+	   Disk (KB)            :     1     5242880   5244678 
+	   GPUs                 :     0           1         1 "GPU-4f5546e5"
+	   GpusMemory (MB)      :   369                       
+	   Memory (MB)          :  1997        5120      5200 
+	   TimeExecute (s)      :   347                       
+	   TimeSlotBusy (s)     :   347                       
+
+	Job terminated of its own accord at 2025-12-16T04:22:48Z with exit-code 1.
+...

@@ -1,0 +1,21 @@
+universe              = vanilla
+executable            = run_nvidia_smi.sh
+
+output                = /u/user/eoyun/4l/25.12.15/MergedElectronID/Scr/nvidia_smi.$(Cluster).$(Process).out
+error                 = /u/user/eoyun/4l/25.12.15/MergedElectronID/Scr/nvidia_smi.$(Cluster).$(Process).err
+log                   = /u/user/eoyun/4l/25.12.15/MergedElectronID/Scr/nvidia_smi.$(Cluster).log
+
+request_cpus          = 1
+request_memory        = 50GB
+request_disk          = 5GB
+request_gpus          = 1
+JobType		      = Long
+
+# (선택) GPU 노드만 타도록 하는 제약이 필요하면 주석 해제 후 조정
+# requirements         = (CUDACapability >= 7.0)
+
+# (선택) 더 자세한 디버그용
+getenv                = false
+
+queue 1
+

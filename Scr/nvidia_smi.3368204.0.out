@@ -1,0 +1,7 @@
+=== Hostname ===
+cluster329.knu.ac.kr
+=== Date ===
+Tue Dec 16 12:24:31 KST 2025
+=== nvidia-smi inside container ===
+hello
+=== Done ===

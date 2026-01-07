@@ -1,0 +1,198 @@
+000 (3368210.000.000) 2025-12-16 15:15:08 Job submitted from host: <155.230.20.251:9618?addrs=155.230.20.251-9618&alias=cms.knu.ac.kr&noUDP&sock=schedd_1657_2484>
+...
+001 (3368210.000.000) 2025-12-16 15:16:06 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2246077"
+	Cpus = 1
+	Disk = 10487558
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 10300
+...
+006 (3368210.000.000) 2025-12-16 15:16:14 Image size of job updated: 157048
+	154  -  MemoryUsage of job (MB)
+	157048  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 15:21:14 Image size of job updated: 2655596
+	2077  -  MemoryUsage of job (MB)
+	2126328  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 15:26:15 Image size of job updated: 2655596
+	2077  -  MemoryUsage of job (MB)
+	2126480  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 15:51:18 Image size of job updated: 4134184
+	4038  -  MemoryUsage of job (MB)
+	4134184  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 15:56:19 Image size of job updated: 5339628
+	5215  -  MemoryUsage of job (MB)
+	5339628  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 16:01:19 Image size of job updated: 5551248
+	5422  -  MemoryUsage of job (MB)
+	5551248  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 16:06:20 Image size of job updated: 5649968
+	5518  -  MemoryUsage of job (MB)
+	5649968  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 16:11:20 Image size of job updated: 5673384
+	5541  -  MemoryUsage of job (MB)
+	5673384  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 16:16:20 Image size of job updated: 5701256
+	5568  -  MemoryUsage of job (MB)
+	5701256  -  ResidentSetSize of job (KB)
+...
+012 (3368210.000.000) 2025-12-16 16:16:20 Job was held.
+	too much request_memory: (RequestMemory - MemoryUsage) > 2048
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 16:20:02 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 16:21:03 Job executing on host: <155.230.20.26:9618?addrs=155.230.20.26-9618+[2407-c000-c025--20-26]-9618&alias=dm01.knu.ac.kr&noUDP&sock=startd_6650_ece3>
+	SlotName: slot2_1@dm01.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_215d8ff6 }
+	CondorScratchDir = "/home/condor/dir_1898588"
+	Cpus = 1
+	Disk = 10487593
+	GPUs = 1
+	GPUs_GPU_215d8ff6 = [ Id = "GPU-215d8ff6"; ClockMhz = 1455.0; Capability = 7.0; CoresPerCU = 64; DeviceName = "NVIDIA TITAN V"; DeviceUuid = "215d8ff6-cc87-41e5-7ee1-be62d3ae87df"; ECCEnabled = false; ComputeUnits = 80; DriverVersion = 13.0; DevicePciBusId = "0000:83:00.0"; GlobalMemoryMb = 12050; MaxSupportedVersion = 13000 ]
+	Memory = 8400
+...
+006 (3368210.000.000) 2025-12-16 17:06:16 Image size of job updated: 7647240
+	7447  -  MemoryUsage of job (MB)
+	7625072  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 17:11:16 Image size of job updated: 8003112
+	7816  -  MemoryUsage of job (MB)
+	8003112  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 17:16:17 Image size of job updated: 8151204
+	7818  -  MemoryUsage of job (MB)
+	8005416  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 17:21:18 Image size of job updated: 8467392
+	8111  -  MemoryUsage of job (MB)
+	8305212  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 17:26:18 Image size of job updated: 8585128
+	8311  -  MemoryUsage of job (MB)
+	8509728  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 17:36:19 Image size of job updated: 8643536
+	8441  -  MemoryUsage of job (MB)
+	8643536  -  ResidentSetSize of job (KB)
+...
+006 (3368210.000.000) 2025-12-16 17:36:51 Image size of job updated: 8647632
+	8445  -  MemoryUsage of job (MB)
+	8647632  -  ResidentSetSize of job (KB)
+...
+012 (3368210.000.000) 2025-12-16 17:37:04 Job was held.
+	memory usage exceeded request_memory
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 17:40:09 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 17:41:54 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2478792"
+	Cpus = 1
+	Disk = 10487558
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 1100
+...
+012 (3368210.000.000) 2025-12-16 17:42:01 Job was held.
+	memory usage exceeded request_memory
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 17:45:33 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 17:46:27 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2490533"
+	Cpus = 1
+	Disk = 10487558
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 1100
+...
+012 (3368210.000.000) 2025-12-16 17:46:32 Job was held.
+	memory usage exceeded request_memory
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 17:50:25 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 17:56:16 Job executing on host: <155.230.20.26:9618?addrs=155.230.20.26-9618+[2407-c000-c025--20-26]-9618&alias=dm01.knu.ac.kr&noUDP&sock=startd_6650_ece3>
+	SlotName: slot2_1@dm01.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_215d8ff6 }
+	CondorScratchDir = "/home/condor/dir_1987207"
+	Cpus = 1
+	Disk = 10487593
+	GPUs = 1
+	GPUs_GPU_215d8ff6 = [ Id = "GPU-215d8ff6"; ClockMhz = 1455.0; Capability = 7.0; CoresPerCU = 64; DeviceName = "NVIDIA TITAN V"; DeviceUuid = "215d8ff6-cc87-41e5-7ee1-be62d3ae87df"; ECCEnabled = false; ComputeUnits = 80; DriverVersion = 13.0; DevicePciBusId = "0000:83:00.0"; GlobalMemoryMb = 12050; MaxSupportedVersion = 13000 ]
+	Memory = 1100
+...
+012 (3368210.000.000) 2025-12-16 17:56:20 Job was held.
+	memory usage exceeded request_memory
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 18:00:05 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 18:00:39 Job executing on host: <155.230.20.26:9618?addrs=155.230.20.26-9618+[2407-c000-c025--20-26]-9618&alias=dm01.knu.ac.kr&noUDP&sock=startd_6650_ece3>
+	SlotName: slot2_1@dm01.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_215d8ff6 }
+	CondorScratchDir = "/home/condor/dir_1987320"
+	Cpus = 1
+	Disk = 10487593
+	GPUs = 1
+	GPUs_GPU_215d8ff6 = [ Id = "GPU-215d8ff6"; ClockMhz = 1455.0; Capability = 7.0; CoresPerCU = 64; DeviceName = "NVIDIA TITAN V"; DeviceUuid = "215d8ff6-cc87-41e5-7ee1-be62d3ae87df"; ECCEnabled = false; ComputeUnits = 80; DriverVersion = 13.0; DevicePciBusId = "0000:83:00.0"; GlobalMemoryMb = 12050; MaxSupportedVersion = 13000 ]
+	Memory = 1100
+...
+012 (3368210.000.000) 2025-12-16 18:00:49 Job was held.
+	memory usage exceeded request_memory
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 18:05:11 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 18:06:35 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2539828"
+	Cpus = 1
+	Disk = 10487558
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 1100
+...
+012 (3368210.000.000) 2025-12-16 18:06:42 Job was held.
+	memory usage exceeded request_memory
+	Code 26 Subcode 0
+...
+013 (3368210.000.000) 2025-12-16 18:10:15 Job was released.
+	via condor_release (by user condor)
+...
+001 (3368210.000.000) 2025-12-16 18:10:47 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2550678"
+	Cpus = 1
+	Disk = 10487558
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 1100
+...
+009 (3368210.000.000) 2025-12-16 18:11:04 Job was aborted.
+	via condor_rm (by user eoyun)
+...

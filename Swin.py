@@ -48,7 +48,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 os.environ['TF_CUDNN_DETERMINISTIC'] = "1"
 os.environ['TF_USE_CUDNN'] = "true"
 
-df = pd.read_csv("251112_v2_v2.csv")
+df = pd.read_csv("251112_v2_v3.csv")
 df = df.sample(frac=1, random_state=10).reset_index(drop=True)
 
 df_mergedHard = df[df['Label'] == 'mergedHard'].reset_index(drop=True)

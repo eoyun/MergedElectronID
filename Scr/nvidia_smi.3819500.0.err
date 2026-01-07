@@ -1,0 +1,1 @@
+Matplotlib created a temporary config/cache directory at /tmp/matplotlib-0juggide because the default path (/srv/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.

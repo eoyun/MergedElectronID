@@ -1,0 +1,31 @@
+Python path configuration:
+  PYTHONHOME = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt'
+  PYTHONPATH = '/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/lib/python3.9/site-packages/itk:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/python:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/lib/python3.9/site-packages:/cvmfs/cms.cern.ch/share/cms/crab/1.0/lib/prod'
+  program name = '/usr/bin/python3'
+  isolated = 0
+  environment = 1
+  user site = 1
+  import site = 1
+  sys._base_executable = '/usr/bin/python3'
+  sys.base_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt'
+  sys.base_exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt'
+  sys.platlibdir = 'lib'
+  sys.executable = '/usr/bin/python3'
+  sys.prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt'
+  sys.exec_prefix = '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt'
+  sys.path = [
+    '/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/lib/python3.9/site-packages/itk',
+    '/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/python',
+    '/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/lib',
+    '/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc13-opt/lib/python3.9/site-packages',
+    '/cvmfs/cms.cern.ch/share/cms/crab/1.0/lib/prod',
+    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt/lib/python310.zip',
+    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt/lib/python3.10',
+    '/cvmfs/sft.cern.ch/lcg/releases/Python/3.9.12-9a1bc/x86_64-el9-gcc13-opt/lib/python3.10/lib-dynload',
+  ]
+Fatal Python error: init_fs_encoding: failed to get the Python codec of the filesystem encoding
+Python runtime state: core initialized
+ModuleNotFoundError: No module named 'encodings'
+
+Current thread 0x0000146539b8d480 (most recent call first):
+  <no Python frame>

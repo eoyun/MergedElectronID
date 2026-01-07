@@ -1,0 +1,7 @@
+Matplotlib created a temporary config/cache directory at /tmp/matplotlib-d684r3gx because the default path (/srv/.config/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+Traceback (most recent call last):
+  File "/u/user/eoyun/4l/25.12.15/MergedElectronID/Swin.py", line 108, in <module>
+    if os.path.getsize(path) == 0:
+  File "/usr/lib/python3.10/genericpath.py", line 50, in getsize
+    return os.stat(filename).st_size
+FileNotFoundError: [Errno 2] No such file or directory: '/d0/scratch/eoyun/ImageDataMergedEle/251112_v2/WtoLNu_3J_MLMEE/WtoLNu_3J_MLMEE_31/Image_4894.png'

@@ -1,0 +1,36 @@
+000 (3368208.000.000) 2025-12-16 13:45:36 Job submitted from host: <155.230.20.251:9618?addrs=155.230.20.251-9618&alias=cms.knu.ac.kr&noUDP&sock=schedd_1657_2484>
+...
+001 (3368208.000.000) 2025-12-16 13:45:50 Job executing on host: <155.230.21.129:9618?addrs=155.230.21.129-9618+[2407-c000-c025--21-129]-9618&alias=cluster329.knu.ac.kr&noUDP&sock=startd_2299_8052>
+	SlotName: slot2_1@cluster329.knu.ac.kr
+	AvailableGPUs = { GPUs_GPU_4f5546e5 }
+	CondorScratchDir = "/home/condor/dir_2215564"
+	Cpus = 1
+	Disk = 5244678
+	GPUs = 1
+	GPUs_GPU_4f5546e5 = [ Id = "GPU-4f5546e5"; ClockMhz = 1740.0; Capability = 8.6; CoresPerCU = 128; DeviceName = "NVIDIA GeForce RTX 3080"; DeviceUuid = "4f5546e5-85fb-0043-df1e-f26c6301d1af"; ECCEnabled = false; ComputeUnits = 68; DriverVersion = 13.0; DevicePciBusId = "0000:3B:00.0"; GlobalMemoryMb = 9875; MaxSupportedVersion = 13000 ]
+	Memory = 5200
+...
+006 (3368208.000.000) 2025-12-16 13:45:50 Image size of job updated: 12
+	0  -  MemoryUsage of job (MB)
+	0  -  ResidentSetSize of job (KB)
+...
+005 (3368208.000.000) 2025-12-16 13:45:50 Job terminated.
+	(1) Normal termination (return value 255)
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated Assigned
+	   Cpus                 :                 1         1 
+	   Disk (KB)            :        1  5242880   5244678 
+	   GPUs                 :                 1         1 "GPU-4f5546e5"
+	   Memory (MB)          :        0     5120      5200 
+	   TimeExecute (s)      :        0                    
+	   TimeSlotBusy (s)     :        0                    
+
+	Job terminated of its own accord at 2025-12-16T04:45:50Z with exit-code 255.
+...
