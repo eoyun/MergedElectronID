@@ -10,3 +10,6 @@ ckpts/
 *.h5
 *.pt
 *.ckpt
+core
+core.*
+*.core
