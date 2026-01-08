@@ -24,8 +24,16 @@ from IPython.display import clear_output
 
 import datetime
 
+import argparse
 import joblib
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--filenum",type=int,default=1)
+
+args = parser.parse_args()
+
+filenum = args.filenum
 
 def generate_output_filename():
     now = datetime.datetime.now()
@@ -38,9 +46,8 @@ BATCH_SIZE = 8
 EPOCHS = 100
 NUM_CLASSES = 3
 datetime = generate_output_filename()
-VERSION = f"wo_add_trk_{datetime}"
+VERSION = "wo_add_trk_20251217_1856"
 AUTOTUNE = tf.data.AUTOTUNE
-samples_per_bin = 375
 
 keras.utils.set_random_seed(SEED)
 os.environ['PYTHONHASHSEED'] = str(SEED)
@@ -50,86 +57,14 @@ os.environ['TF_USE_CUDNN'] = "true"
 
 df = pd.read_csv("251112_v2_v2.csv")
 df = df.sample(frac=1, random_state=10).reset_index(drop=True)
+ohe = joblib.load("ohe.pkl")
+df = df[df['Label'] != 'mergedHard'].reset_index(drop=True)
 
-df_mergedHard = df[df['Label'] == 'mergedHard'].reset_index(drop=True)
-df_mergedHard = df_mergedHard.iloc[:30000]
-#print(df_mergedHard)
-df_notMerged = df[df['Label'] == 'notMerged'].reset_index(drop=True)
-df_notMerged = df_notMerged.iloc[:50000]
-df_notElectron = df[df['Label'] == 'notElectron'].reset_index(drop=True)
-df_notElectron = df_notElectron.iloc[:50000]
-#dfs = []
+print(len(df))
+df = df.iloc[200000*(filenum - 1):min(200000*filenum,len(df))]
+X = df["ImagePath"].to_numpy()
+y = df["Label"].to_numpy()
 
-#for i in range(0,80):
-#    # 구간 필터
-#    df_bin = df_notMerged[(df['pT'] >= i*10) & (df_notMerged['pT'] < (i+1)*10)]
-#    
-#    # 300개 이상 있으면 sampling, 부족하면 전체 사용
-#    if len(df_bin) > samples_per_bin:
-#        df_bin = df_bin.sample(samples_per_bin, random_state=0)
-#    
-#    dfs.append(df_bin)
-#
-## 최종 합치기
-#df_notMerged = pd.concat(dfs, ignore_index=True)
-#
-#print(df_notMerged)
-#df_notElectron = df[df['Label'] == 'notElectron'].reset_index(drop=True)
-#df_notElectron = df_notElectron.iloc[:30000]
-#dfs = []
-#
-#for i in range(0,100):
-#    # 구간 필터
-#    df_bin = df_notElectron[(df['pT'] >= i*10) & (df_notElectron['pT'] < (i+1)*10)]
-#    
-#    # 300개 이상 있으면 sampling, 부족하면 전체 사용
-#    if len(df_bin) > samples_per_bin:
-#        df_bin = df_bin.sample(samples_per_bin, random_state=0)
-#    
-#    dfs.append(df_bin)
-
-# 최종 합치기
-#df_notElectron = pd.concat(dfs, ignore_index=True)
-#print(df_notElectron)
-df_train = pd.concat([df_mergedHard, df_notMerged, df_notElectron], ignore_index=True)
-df_train = df_train.sample(frac=1, random_state=42).reset_index(drop=True)
-#print(df_train)
-X = df_train["ImagePath"].to_numpy()
-y = df_train["Label"].to_numpy()
-labels = np.unique(y)
-#################################3
-# x: 불균형을 유발하는 variable (예: pt)
-# y: class label
-nbins = 10
-
-pTs = df_train['pT'].to_numpy()
-
-bins = np.linspace(pTs.min(),pTs.max()+1, nbins + 1)
-bin_idx = np.digitize(pTs, bins) - 1
-#print(pTs.min(), pTs.max())
-
-# (class, bin) 별 개수 계산
-counts = {}
-for c in labels:
-    for b in range(nbins):
-        counts[(c, b)] = np.sum((y == c) & (bin_idx == b))
-        #print("example c,b:", c, b)
-
-# weight 계산
-weights = np.zeros(len(pTs))
-for i in range(len(pTs)):
-    c = y[i]
-    b = bin_idx[i]
-    #print(pTs[i])
-    #print("example c,b:", c, b)
-    #print("b range:", bin_idx.min(), bin_idx.max(), "expected:", 0, nbins-1)
-    #print("has class in classes?:", c in labels)
-    #print("count key exists?:", (c, b) in counts)
-    weights[i] = 1.0 / max(counts[(c, b)], 1)
-
-# 정규화 (선택)
-weights *= len(weights) / weights.sum()
-##################333
 def check_for_empty_files(directory):
     for root, _, files in os.walk(directory):
         print(root)
@@ -143,6 +78,7 @@ for path in df.ImagePath:
     if os.path.getsize(path) == 0:
         print(f"{path} is empty")
 
+labels = np.unique(y)
 
 def read_image(image_path, label=None):
     image = tf.io.read_file(image_path)
@@ -183,10 +119,6 @@ def apply_augment(image, label=None):
 
 
 
-ohe = OneHotEncoder(sparse_output=False)
-ohe.fit(y.reshape(-1, 1))
-
-joblib.dump(ohe,"ohe.pkl")
 
 def build_model():
     keras.mixed_precision.set_global_policy("mixed_float16")
@@ -240,51 +172,51 @@ class MetricsLogger(keras.callbacks.Callback):
         self.history["val_f1"].append(logs.get("val_f1"))
 
 
-metrics_logger = MetricsLogger()
-X_tmp, X_test, y_tmp, y_test, weights_tmp, weight_test = train_test_split(X, y, weights, test_size =0.2)
-skf = StratifiedKFold(n_splits=5, random_state=SEED, shuffle=True)
-for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp, weights_tmp)):
-    X_train, y_train, weights_train = X_tmp[train_idx], y_tmp[train_idx], weights_tmp[train_idx]
-    X_valid, y_valid, weights_valid = X_tmp[valid_idx], y_tmp[valid_idx], weights_tmp[valid_idx]
-    #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size =0.2)
-    #X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size =0.5)
-    print(f"{len(X_test)} : test")
-    print(f"{len(X_train)} : train")
-    print(f"{len(X_valid)} : valid")
-    y_train = ohe.transform(y_train.reshape(-1, 1))
-    y_valid = ohe.transform(y_valid.reshape(-1, 1))
-
-    ds_train = tf.data.Dataset.from_tensor_slices((X_train, y_train,weights_train)).shuffle(len(y_train))
-    ds_train = ds_train.map(lambda image, label, w: (*read_image(image, label), w), num_parallel_calls=AUTOTUNE).cache()
-    ds_train = ds_train.map(lambda image, label, w: (*resize(image, label), w), num_parallel_calls=AUTOTUNE)
-    ds_train = ds_train.map(lambda image, label, w: (*apply_augment(image, label), w), num_parallel_calls=AUTOTUNE)
-    ds_train = ds_train.batch(BATCH_SIZE)
-    
-    ds_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid, weights_valid))
-    ds_valid = ds_valid.map(lambda image, label, w: (*read_image(image, label), w), num_parallel_calls=AUTOTUNE)
-    ds_valid = ds_valid.map(lambda image, label, w: (*resize(image, label), w), num_parallel_calls=AUTOTUNE)
-    ds_valid = ds_valid.batch(BATCH_SIZE).prefetch(AUTOTUNE).cache()
-    
-    
-    callbacks = [
-        DisplayCallback(),
-        keras.callbacks.TensorBoard(log_dir=f"./logs/keras/{VERSION}/fold_{fold}"),
-        keras.callbacks.EarlyStopping(monitor="val_f1", mode="max", verbose=0, patience=5),
-        keras.callbacks.ModelCheckpoint(f"./ckpts/keras/{VERSION}/fold_{fold}.keras", monitor="val_f1", mode="max", save_best_only=True),
-        keras.callbacks.ReduceLROnPlateau(monitor="val_loss", mode="min", factor=0.8, patience=3),
-        metrics_logger
-    ]
-    
-    optimizer = keras.optimizers.AdamW(1e-5)
-    loss = keras.losses.CategoricalFocalCrossentropy(from_logits=False)
-    f1 = keras.metrics.F1Score(average="macro", name="f1")
-    
-    model = build_model()
-    #model = get_debug_swin_v2()
-    model.compile(optimizer=optimizer, loss=loss, metrics=[f1])
-    model.fit(ds_train, validation_data=ds_valid, epochs=EPOCHS, callbacks=callbacks)
-    
-    K.clear_session()
+#metrics_logger = MetricsLogger()
+#X_tmp, X_test, y_tmp, y_test = train_test_split(X, y, test_size =0.2)
+#skf = StratifiedKFold(n_splits=5, random_state=SEED, shuffle=True)
+#for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp)):
+#    X_train, y_train = X[train_idx], y[train_idx]
+#    X_valid, y_valid = X[valid_idx], y[valid_idx]
+#    #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size =0.2)
+#    #X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size =0.5)
+#    print(f"{len(X_test)} : test")
+#    print(f"{len(X_train)} : train")
+#    print(f"{len(X_valid)} : valid")
+#    y_train = ohe.transform(y_train.reshape(-1, 1))
+#    y_valid = ohe.transform(y_valid.reshape(-1, 1))
+#
+#    ds_train = tf.data.Dataset.from_tensor_slices((X_train, y_train)).shuffle(len(y_train))
+#    ds_train = ds_train.map(lambda image, label: read_image(image, label), num_parallel_calls=AUTOTUNE).cache()
+#    ds_train = ds_train.map(lambda image, label: resize(image, label), num_parallel_calls=AUTOTUNE)
+#    ds_train = ds_train.map(lambda image, label: apply_augment(image, label), num_parallel_calls=AUTOTUNE)
+#    ds_train = ds_train.batch(BATCH_SIZE)
+#    
+#    ds_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid))
+#    ds_valid = ds_valid.map(lambda image, label: read_image(image, label), num_parallel_calls=AUTOTUNE)
+#    ds_valid = ds_valid.map(lambda image, label: resize(image, label), num_parallel_calls=AUTOTUNE)
+#    ds_valid = ds_valid.batch(BATCH_SIZE).prefetch(AUTOTUNE).cache()
+#    
+#    
+#    callbacks = [
+#        DisplayCallback(),
+#        keras.callbacks.TensorBoard(log_dir=f"./logs/keras/{VERSION}/fold_{fold}"),
+#        keras.callbacks.EarlyStopping(monitor="val_f1", mode="max", verbose=0, patience=5),
+#        keras.callbacks.ModelCheckpoint(f"./ckpts/keras/{VERSION}/fold_{fold}.keras", monitor="val_f1", mode="max", save_best_only=True),
+#        keras.callbacks.ReduceLROnPlateau(monitor="val_f1", mode="min", factor=0.8, patience=3),
+#        metrics_logger
+#    ]
+#    
+#    optimizer = keras.optimizers.AdamW(1e-5)
+#    loss = keras.losses.CategoricalFocalCrossentropy(from_logits=False)
+#    f1 = keras.metrics.F1Score(average="macro", name="f1")
+#    
+#    model = build_model()
+#    #model = get_debug_swin_v2()
+#    model.compile(optimizer=optimizer, loss=loss, metrics=[f1])
+#    model.fit(ds_train, validation_data=ds_valid, epochs=EPOCHS, callbacks=callbacks)
+#    
+#    K.clear_session()
 
 
 import matplotlib.pyplot as plt
@@ -315,7 +247,7 @@ def plot_training_history(metrics_logger):
     plt.legend()
     plt.savefig(f"./results/test_{VERSION}.png")
 
-plot_training_history(metrics_logger)
+#plot_training_history(metrics_logger)
 
 from sklearn.preprocessing import label_binarize
 
@@ -337,7 +269,7 @@ def plot_roc_curve(y_true, y_pred, labels, num_classes):
     plt.legend(loc="lower right")
     plt.savefig(f"./results/roc_{VERSION}.png")
 
-ds_test = tf.data.Dataset.from_tensor_slices(X_test)
+ds_test = tf.data.Dataset.from_tensor_slices(X)
 ds_test = ds_test.map(lambda image: read_image(image), num_parallel_calls=AUTOTUNE)
 ds_test = ds_test.map(lambda image: resize(image), num_parallel_calls=AUTOTUNE)
 ds_test = ds_test.batch(BATCH_SIZE*2).prefetch(AUTOTUNE).cache()
@@ -351,12 +283,14 @@ for cpkt in tqdm(glob(f"./ckpts/keras/{VERSION}/fold_*.keras")):
 print(y_preds)
 y_preds = np.sum(np.array(y_preds), axis=0)
 
-plot_roc_curve(y_test,y_preds,labels,len(labels))
+#plot_roc_curve(y_test,y_preds,labels,len(labels))
 
 y_preds = ohe.inverse_transform(y_preds).reshape(-1)
-
-df_submission = pd.DataFrame({
-    'pred' : y_preds,
-    'true' : y_test
-    })
-df_submission.to_csv(f"./results/keras/{VERSION}.csv", index=False)
+df['prediction'] = y_preds
+print(df)
+df.to_csv(f"./results/keras/{VERSION}_df_bkg_eff_{filenum}.csv", index=False)
+#df_submission = pd.DataFrame({
+#    'pred' : y_preds,
+#    'true' : y_test
+#    })
+#df_submission.to_csv(f"./results/keras/{VERSION}.csv", index=False)
