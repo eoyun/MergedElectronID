@@ -53,48 +53,83 @@ df = df.sample(frac=1, random_state=10).reset_index(drop=True)
 
 df_mergedHard = df[df['Label'] == 'mergedHard'].reset_index(drop=True)
 df_mergedHard = df_mergedHard.iloc[:30000]
-print(df_mergedHard)
+#print(df_mergedHard)
 df_notMerged = df[df['Label'] == 'notMerged'].reset_index(drop=True)
-#df_notMerged = df_notMerged.iloc[:30000]
-dfs = []
-
-for i in range(0,80):
-    # 구간 필터
-    df_bin = df_notMerged[(df['pT'] >= i*10) & (df_notMerged['pT'] < (i+1)*10)]
-    
-    # 300개 이상 있으면 sampling, 부족하면 전체 사용
-    if len(df_bin) > samples_per_bin:
-        df_bin = df_bin.sample(samples_per_bin, random_state=0)
-    
-    dfs.append(df_bin)
-
-# 최종 합치기
-df_notMerged = pd.concat(dfs, ignore_index=True)
-
-print(df_notMerged)
+df_notMerged = df_notMerged.iloc[:50000]
 df_notElectron = df[df['Label'] == 'notElectron'].reset_index(drop=True)
-#df_notElectron = df_notElectron.iloc[:30000]
-dfs = []
+df_notElectron = df_notElectron.iloc[:50000]
+#dfs = []
 
-for i in range(0,100):
-    # 구간 필터
-    df_bin = df_notElectron[(df['pT'] >= i*10) & (df_notElectron['pT'] < (i+1)*10)]
-    
-    # 300개 이상 있으면 sampling, 부족하면 전체 사용
-    if len(df_bin) > samples_per_bin:
-        df_bin = df_bin.sample(samples_per_bin, random_state=0)
-    
-    dfs.append(df_bin)
+#for i in range(0,80):
+#    # 구간 필터
+#    df_bin = df_notMerged[(df['pT'] >= i*10) & (df_notMerged['pT'] < (i+1)*10)]
+#    
+#    # 300개 이상 있으면 sampling, 부족하면 전체 사용
+#    if len(df_bin) > samples_per_bin:
+#        df_bin = df_bin.sample(samples_per_bin, random_state=0)
+#    
+#    dfs.append(df_bin)
+#
+## 최종 합치기
+#df_notMerged = pd.concat(dfs, ignore_index=True)
+#
+#print(df_notMerged)
+#df_notElectron = df[df['Label'] == 'notElectron'].reset_index(drop=True)
+#df_notElectron = df_notElectron.iloc[:30000]
+#dfs = []
+#
+#for i in range(0,100):
+#    # 구간 필터
+#    df_bin = df_notElectron[(df['pT'] >= i*10) & (df_notElectron['pT'] < (i+1)*10)]
+#    
+#    # 300개 이상 있으면 sampling, 부족하면 전체 사용
+#    if len(df_bin) > samples_per_bin:
+#        df_bin = df_bin.sample(samples_per_bin, random_state=0)
+#    
+#    dfs.append(df_bin)
 
 # 최종 합치기
-df_notElectron = pd.concat(dfs, ignore_index=True)
-print(df_notElectron)
+#df_notElectron = pd.concat(dfs, ignore_index=True)
+#print(df_notElectron)
 df_train = pd.concat([df_mergedHard, df_notMerged, df_notElectron], ignore_index=True)
 df_train = df_train.sample(frac=1, random_state=42).reset_index(drop=True)
-print(df_train)
+#print(df_train)
 X = df_train["ImagePath"].to_numpy()
 y = df_train["Label"].to_numpy()
+labels = np.unique(y)
+#################################3
+# x: 불균형을 유발하는 variable (예: pt)
+# y: class label
+nbins = 10
 
+pTs = df_train['pT'].to_numpy()
+
+bins = np.linspace(pTs.min(),pTs.max()+1, nbins + 1)
+bin_idx = np.digitize(pTs, bins) - 1
+#print(pTs.min(), pTs.max())
+
+# (class, bin) 별 개수 계산
+counts = {}
+for c in labels:
+    for b in range(nbins):
+        counts[(c, b)] = np.sum((y == c) & (bin_idx == b))
+        #print("example c,b:", c, b)
+
+# weight 계산
+weights = np.zeros(len(pTs))
+for i in range(len(pTs)):
+    c = y[i]
+    b = bin_idx[i]
+    #print(pTs[i])
+    #print("example c,b:", c, b)
+    #print("b range:", bin_idx.min(), bin_idx.max(), "expected:", 0, nbins-1)
+    #print("has class in classes?:", c in labels)
+    #print("count key exists?:", (c, b) in counts)
+    weights[i] = 1.0 / max(counts[(c, b)], 1)
+
+# 정규화 (선택)
+weights *= len(weights) / weights.sum()
+##################333
 def check_for_empty_files(directory):
     for root, _, files in os.walk(directory):
         print(root)
@@ -108,7 +143,6 @@ for path in df.ImagePath:
     if os.path.getsize(path) == 0:
         print(f"{path} is empty")
 
-labels = np.unique(y)
 
 def read_image(image_path, label=None):
     image = tf.io.read_file(image_path)
@@ -207,11 +241,11 @@ class MetricsLogger(keras.callbacks.Callback):
 
 
 metrics_logger = MetricsLogger()
-X_tmp, X_test, y_tmp, y_test = train_test_split(X, y, test_size =0.2)
+X_tmp, X_test, y_tmp, y_test, weights_tmp, weight_test = train_test_split(X, y, weights, test_size =0.2)
 skf = StratifiedKFold(n_splits=5, random_state=SEED, shuffle=True)
-for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp)):
-    X_train, y_train = X[train_idx], y[train_idx]
-    X_valid, y_valid = X[valid_idx], y[valid_idx]
+for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp, weights_tmp)):
+    X_train, y_train, weights_train = X_tmp[train_idx], y_tmp[train_idx], weights_tmp[train_idx]
+    X_valid, y_valid, weights_valid = X_tmp[valid_idx], y_tmp[valid_idx], weights_tmp[valid_idx]
     #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size =0.2)
     #X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size =0.5)
     print(f"{len(X_test)} : test")
@@ -220,15 +254,15 @@ for fold, (train_idx, valid_idx) in enumerate(skf.split(X_tmp, y_tmp)):
     y_train = ohe.transform(y_train.reshape(-1, 1))
     y_valid = ohe.transform(y_valid.reshape(-1, 1))
 
-    ds_train = tf.data.Dataset.from_tensor_slices((X_train, y_train)).shuffle(len(y_train))
-    ds_train = ds_train.map(lambda image, label: read_image(image, label), num_parallel_calls=AUTOTUNE).cache()
-    ds_train = ds_train.map(lambda image, label: resize(image, label), num_parallel_calls=AUTOTUNE)
-    ds_train = ds_train.map(lambda image, label: apply_augment(image, label), num_parallel_calls=AUTOTUNE)
+    ds_train = tf.data.Dataset.from_tensor_slices((X_train, y_train,weights_train)).shuffle(len(y_train))
+    ds_train = ds_train.map(lambda image, label, w: (*read_image(image, label), w), num_parallel_calls=AUTOTUNE).cache()
+    ds_train = ds_train.map(lambda image, label, w: (*resize(image, label), w), num_parallel_calls=AUTOTUNE)
+    ds_train = ds_train.map(lambda image, label, w: (*apply_augment(image, label), w), num_parallel_calls=AUTOTUNE)
     ds_train = ds_train.batch(BATCH_SIZE)
     
-    ds_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid))
-    ds_valid = ds_valid.map(lambda image, label: read_image(image, label), num_parallel_calls=AUTOTUNE)
-    ds_valid = ds_valid.map(lambda image, label: resize(image, label), num_parallel_calls=AUTOTUNE)
+    ds_valid = tf.data.Dataset.from_tensor_slices((X_valid, y_valid, weights_valid))
+    ds_valid = ds_valid.map(lambda image, label, w: (*read_image(image, label), w), num_parallel_calls=AUTOTUNE)
+    ds_valid = ds_valid.map(lambda image, label, w: (*resize(image, label), w), num_parallel_calls=AUTOTUNE)
     ds_valid = ds_valid.batch(BATCH_SIZE).prefetch(AUTOTUNE).cache()
     
     

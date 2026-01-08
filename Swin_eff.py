@@ -46,7 +46,7 @@ BATCH_SIZE = 8
 EPOCHS = 100
 NUM_CLASSES = 3
 datetime = generate_output_filename()
-VERSION = "wo_add_trk_20251124_1726"
+VERSION = "wo_add_trk_20251217_1856"
 AUTOTUNE = tf.data.AUTOTUNE
 
 keras.utils.set_random_seed(SEED)
@@ -58,10 +58,10 @@ os.environ['TF_USE_CUDNN'] = "true"
 df = pd.read_csv("251112_v2_v2.csv")
 df = df.sample(frac=1, random_state=10).reset_index(drop=True)
 ohe = joblib.load("ohe.pkl")
-df = df[df['Label'] == 'mergedHard'].reset_index(drop=True)
+df = df[df['Label'] != 'mergedHard'].reset_index(drop=True)
 
 print(len(df))
-#df = df.iloc[200000*(filenum - 1):min(200000*filenum,len(df))]
+df = df.iloc[200000*(filenum - 1):min(200000*filenum,len(df))]
 X = df["ImagePath"].to_numpy()
 y = df["Label"].to_numpy()
 
@@ -288,7 +288,7 @@ y_preds = np.sum(np.array(y_preds), axis=0)
 y_preds = ohe.inverse_transform(y_preds).reshape(-1)
 df['prediction'] = y_preds
 print(df)
-df.to_csv(f"./results/keras/{VERSION}_df_sig_eff_{filenum}.csv", index=False)
+df.to_csv(f"./results/keras/{VERSION}_df_bkg_eff_{filenum}.csv", index=False)
 #df_submission = pd.DataFrame({
 #    'pred' : y_preds,
 #    'true' : y_test
